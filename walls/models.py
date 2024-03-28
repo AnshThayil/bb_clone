@@ -9,6 +9,13 @@ class Wall(models.Model):
     img_width = models.PositiveIntegerField()
     img_height = models.PositiveIntegerField()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['gym', 'wall_name'], name='unique_wall_name_per_gym'
+            )
+        ]
+
     def __str__(self):
         return f"{self.wall_name} at {self.gym.name}"
 
