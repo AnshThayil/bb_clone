@@ -22,6 +22,7 @@ class Boulder(models.Model):
     wall = models.ForeignKey(Wall, on_delete=models.CASCADE)
     boulder_name = models.CharField(max_length=100)
     setter = models.ForeignKey(User, on_delete=models.CASCADE)
+    grade = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(17)])
 
     class Meta:
         constraints = [

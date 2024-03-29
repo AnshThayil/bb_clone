@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .models import Gym
+from walls.models import Wall
+from boulders.models import Boulder
 
 # Create your views here.
 
@@ -12,10 +14,15 @@ def home(request):
 
     return render(request, 'gyms/home.html', context)
 
-def gym(request):
+def gym(request, pk):
+    gym = Gym.objects.get(pk=pk)
+    boulders = Boulder.objects.filter(wall__gym = gym)
+    
     context = {
-        'gym': Gym.objects.all().first(),
-        'title': 'Replace this'
+        'gym': gym, 
+        'title': 'Replace this',
+        'boulders': boulders,
+
     }
 
     return render(request, 'gyms/gym.html', context)

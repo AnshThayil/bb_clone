@@ -12,7 +12,7 @@ class Wall(models.Model):
         Name of the Wall
     gym: Gym
         Gym associated with the climbing wall
-    image_url: Url
+    img_url: Url
         URL where the image is hosted (for simplicity)
     img_width: int
         Image width.
@@ -21,7 +21,7 @@ class Wall(models.Model):
     '''
     wall_name = models.CharField(max_length=100)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    image_url = models.URLField()
+    img_url = models.URLField()
     img_width = models.PositiveIntegerField()
     img_height = models.PositiveIntegerField()
 
