@@ -4,6 +4,18 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Gym(models.Model):
+    '''
+    A Django model to represent the Gym object.
+
+    Attributes
+    ----
+    name: string
+        Name of the Gym
+    address: string
+        Address of the Gym
+    staff: User
+        User associated with the Gym. Only this User can edit gym details and images.
+    '''
     name = models.CharField(max_length=100)
     addr = models.CharField(max_length=255)
     staff = models.ForeignKey(User, on_delete=models.CASCADE)

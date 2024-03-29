@@ -3,6 +3,22 @@ from gyms.models import Gym
 
 # Create your models here.
 class Wall(models.Model):
+    '''
+    A Django model to represent the Wall object.
+
+    Attributes
+    ----
+    wall_name: string
+        Name of the Wall
+    gym: Gym
+        Gym associated with the climbing wall
+    image_url: Url
+        URL where the image is hosted (for simplicity)
+    img_width: int
+        Image width.
+    img_height: int
+        Image height.
+    '''
     wall_name = models.CharField(max_length=100)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
     image_url = models.URLField()

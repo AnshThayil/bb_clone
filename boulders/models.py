@@ -7,6 +7,18 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Boulder(models.Model):
+    '''
+    A Django model for the Boulder object.
+
+    Attributes
+    ----
+    boulder_name: string
+        Name of the boulder problem.
+    wall: Wall
+        The Wall on which the boulder is set.
+    setter: User
+        The User who created the boulder problem.
+    '''
     wall = models.ForeignKey(Wall, on_delete=models.CASCADE)
     boulder_name = models.CharField(max_length=100)
     setter = models.ForeignKey(User, on_delete=models.CASCADE)
