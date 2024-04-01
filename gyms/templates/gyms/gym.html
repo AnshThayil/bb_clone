@@ -1,6 +1,6 @@
-{% extends "gyms/base.html" %}
+{% extends "base.html" %}
 {% block content %}
-    <div style="margin: 5%;">
+    <div>
         <h1 class="text-center">{{ gym.name }}</h1>
         <h3 class="text-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
@@ -22,7 +22,7 @@
                 {% for boulder in boulders %}
                     <li class="list-group-item">
                         <div class="row justify-content-center">
-                            <i class="text-center col-sm-1">{{ boulder.sender_set.count }}</i><strong class="col-sm-3 text-center">{{ boulder.boulder_name }}</strong> <i class="col-sm-1">V{{ boulder.grade }}</i><span class="col-sm-2">{{ boulder.wall.wall_name}}</span>
+                            <i class="text-center col-sm-1">{{ boulder.sender_set.count }}</i> <strong class="col-sm-3 text-center"><a href="../boulder/{{ boulder.pk }}">{{ boulder.boulder_name }}</a></strong> <i class="col-sm-1">V{{ boulder.grade }}</i><span class="col-sm-2">{{ boulder.wall.wall_name}}</span></a>
                         </div>
                     </li>
                 {% endfor %}
