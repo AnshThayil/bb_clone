@@ -1,4 +1,4 @@
-{% extends "gyms/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
     <h1 class="text-center">View all gyms</h1> 
@@ -15,7 +15,7 @@
                             </svg>
                             {{ gym.addr }}
                         </p>
-                        <a href="{{ gym.pk }}" class="btn btn-primary">View Boulders</a>
+                        <a href="gym/{{ gym.pk }}" class="btn btn-primary">View Boulders</a>
                     </div>
                 </div>
             </div>

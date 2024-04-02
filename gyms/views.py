@@ -20,7 +20,7 @@ def gym(request, pk):
     
     context = {
         'gym': gym, 
-        'title': 'Replace this',
+        'title':  gym.name,
         'boulders': boulders,
 
     }
