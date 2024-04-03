@@ -28,21 +28,4 @@
             </ul>
         </div>
     </div>
-
-
-    {% if user.is_authenticated %}
-        <div>
-            <a href="#">Create Boulder</a>
-        </div>
-        {% if gym.staff == user %}
-            <div>
-                <a href="#">Manage Walls</a>
-            </div>
-            <div>
-                <a href="#">Delete Gym</a>
-            </div>
-        {% endif %}
-    {% endif %}
-    
-
 {% endblock %}
