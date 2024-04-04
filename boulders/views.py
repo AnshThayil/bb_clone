@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from .models import Boulder
+from django.views.generic import DetailView
 
 # Create your views here.
-def boulder(request, pk):
-    boulder = Boulder.objects.get(pk=pk)
-    context = {
-        'boulder': boulder,
-        'annotations': boulder.annotation_set.all()
-    }
 
-    return render(request, 'boulders/boulder.html', context)
+class BoulderDetailView(DetailView):
+    model = Boulder
+    context_object_name = 'boulder'

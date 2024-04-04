@@ -15,7 +15,7 @@
         img.onload = function(){
             ctx.drawImage(img,0,0); // Or at whatever offset you like
             
-            {% for annotation in annotations %}
+            {% for annotation in boulder.annotation_set.all %}
                 ctx.beginPath();
                 ctx.arc({{ annotation.coord_x }}, {{ annotation.coord_y }}, {{ annotation.radius }}, 0, 2 * Math.PI, true);
                 ctx.lineWidth = 5;

@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from .views import BoulderDetailView
 
 urlpatterns = [
-    path('<int:pk>/', views.boulder, name='boulder-detail')
+    path('<int:pk>/', BoulderDetailView.as_view(), name='boulder-detail')
 ]
