@@ -1,9 +1,9 @@
-from typing import Collection
 from django.db import models
 from walls.models import Wall
 from django.contrib.auth.models  import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 # Create your models here.
 class Boulder(models.Model):
@@ -33,6 +33,9 @@ class Boulder(models.Model):
 
     def __str__(self):
         return self.boulder_name
+    
+    def get_absolute_url(self):
+        return reverse('boulder_detail', kwargs={'pk': self.pk})
 
 
 class Annotation(models.Model):
