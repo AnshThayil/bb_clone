@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
+from .models import Profile
+from django.urls import reverse
 
 # Create your views here.
 
@@ -23,4 +25,10 @@ def register(request):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    if request.method == 'GET':
+        return render(request, 'users/profile.html', context={'profile': Profile.objects.get(user = request.user)})
+    if request.method == 'POST':
+        obj = Profile.objects.get(user = request.user)
+        obj.grade_format_font = not obj.grade_format_font
+        obj.save()
+        return redirect(reverse('profile'))
