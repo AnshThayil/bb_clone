@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <div>
-        <h1 class="text-center">{{ boulder.boulder_name }} <i>(V{{ boulder.grade }})</i></h1>
+        <h1 class="text-center">{{ boulder.boulder_name }} <i>({{ boulder.grade }})</i></h1>
         <h5 class="text-center">{{ boulder.wall.wall_name }} at  {{ boulder.wall.gym.name }}</h5>
     </div>
     <div class="row justify-content-center">
