@@ -1,5 +1,6 @@
 from django.db import models
 from gyms.models import Gym
+from django.urls import reverse
 
 # Create your models here.
 class Wall(models.Model):
@@ -34,4 +35,6 @@ class Wall(models.Model):
 
     def __str__(self):
         return f"{self.wall_name} at {self.gym.name}"
-
+    
+    def get_absolute_url(self):
+        return reverse('wall_list', kwargs={'gym_pk': self.gym.pk})

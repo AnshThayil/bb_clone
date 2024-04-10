@@ -1,28 +1,53 @@
 from django.shortcuts import render
 from .models import Gym
-from walls.models import Wall
 from boulders.models import Boulder
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
 
+class GymListView(ListView):
+    model = Gym
+    context_object_name = 'gyms'
 
-def home(request):
-    context = {
-        'gyms': Gym.objects.all(),
-        'title': 'Gyms'
-    }
+class GymDetailView(DetailView):
+    model = Gym
+    context_object_name = 'gym'
 
-    return render(request, 'gyms/home.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["boulders"] = Boulder.objects.all().filter(wall__gym = context['gym'])
+        return context
 
-def gym(request, pk):
-    gym = Gym.objects.get(pk=pk)
-    boulders = Boulder.objects.filter(wall__gym = gym)
+class GymCreateView(LoginRequiredMixin, CreateView):
+    model = Gym
+    fields = ['name', 'addr']
+
+    def form_valid(self, form):
+        form.instance.staff = self.request.user
+        return super().form_valid(form)
+
+class GymUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Gym
+    fields = ['name', 'addr']
+    template_name = 'gyms/gym_update_form.html'
+
+    def form_valid(self, form):
+        form.instance.staff = self.request.user
+        return super().form_valid(form)
     
-    context = {
-        'gym': gym, 
-        'title':  gym.name,
-        'boulders': boulders,
+    def test_func(self):
+        gym = self.get_object()
+        if self.request.user == gym.staff:
+            return True
+        return False
 
-    }
+class GymDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Gym
+    success_url = '/'
 
-    return render(request, 'gyms/gym.html', context)
+    def test_func(self):
+        gym = self.get_object()
+        if self.request.user == gym.staff:
+            return True
+        return False

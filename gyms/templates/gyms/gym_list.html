@@ -21,5 +21,12 @@
             </div>
         {% endfor %}
     </div>
+    {% if user.is_authenticated %}
+        {% if user.is_staff %}
+            <div>
+                <a href="{% url 'gym_create' %}">Create a new gym</a>
+            </div>
+        {% endif %}
+    {% endif %}
 
 {% endblock %}
