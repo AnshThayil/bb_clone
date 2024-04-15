@@ -1,4 +1,4 @@
-from .models import Boulder 
+from .models import Boulder, Sender
 from gyms.models import Gym
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from .forms import BoulderCreateForm, BoulderUpdateForm
@@ -11,6 +11,16 @@ from django.shortcuts import get_object_or_404
 class BoulderDetailView(DetailView):
     model = Boulder
     context_object_name = 'boulder'
+
+    def get_context_data(self, **kwargs):
+        context = super(BoulderDetailView, self).get_context_data(**kwargs)
+        context['user_has_sent'] = False
+        for sender in context['boulder'].sender_set.all():
+            if sender.sender == self.request.user:
+                context['user_has_sent'] = True
+                context['sender_pk'] = sender.pk
+        return context
+
 
 class BoulderCreateView(LoginRequiredMixin, CreateView):
 
@@ -66,9 +76,34 @@ class BoulderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         gym_pk = self.get_object().wall.gym.pk
         return reverse('gym_detail', kwargs={'pk': gym_pk})
 
-
     def test_func(self):
         boulder = self.get_object()
         if self.request.user == boulder.setter:
+            return True
+        return False
+
+class SenderCreateView(LoginRequiredMixin, CreateView):
+    model = Sender
+    fields = ['flash']
+    template_name = 'base.html'
+
+    def form_valid(self, form):
+        form.instance.sender = self.request.user
+        form.instance.boulder = Boulder.objects.get(pk=self.kwargs['pk'])
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('boulder_detail', kwargs={'pk': self.kwargs['pk']})
+
+class SenderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Sender
+
+    def get_success_url(self):
+        pk = self.get_object().boulder.pk
+        return reverse('boulder_detail', kwargs={'pk': pk})
+
+    def test_func(self):
+        sender = self.get_object().sender
+        if self.request.user == sender:
             return True
         return False

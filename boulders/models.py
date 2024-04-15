@@ -4,6 +4,7 @@ from django.contrib.auth.models  import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.urls import reverse
+from datetime import date
 
 # Create your models here.
 class Boulder(models.Model):
@@ -50,6 +51,8 @@ class Annotation(models.Model):
 class Sender(models.Model):
     boulder = models.ForeignKey(Boulder, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    flash = models.BooleanField()
+    date = models.DateField(default=date.today)
 
     def __str__(self):
-        return f"{self.boulder.boulder_name} was sent by {self.sender.first_name}"
+        return f"{self.boulder.boulder_name} was sent by {self.sender.username}"

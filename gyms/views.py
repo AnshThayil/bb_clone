@@ -3,6 +3,7 @@ from .models import Gym
 from boulders.models import Boulder
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from itertools import islice
 
 # Create your views here.
 
@@ -14,9 +15,29 @@ class GymDetailView(DetailView):
     model = Gym
     context_object_name = 'gym'
 
+    def boulder_search_generator(self, query, gym):
+        for boulder in Boulder.objects.filter(wall__gym = gym, boulder_name__icontains=query).order_by('boulder_name').iterator():
+            yield boulder
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["boulders"] = Boulder.objects.all().filter(wall__gym = context['gym'])
+        query = self.request.GET.get('query', '')
+        pagination = self.request.GET.get('page', '0')
+        if query:
+            if int(pagination) == 0:
+                boulders = self.boulder_search_generator(query, context['gym'])
+            else:
+                boulders = islice(self.boulder_search_generator(query, context['gym']), (5 * int(pagination)), None)
+            
+            context['boulders'] = []
+            try:
+                for _ in range(5):
+                    context['boulders'].append(next(boulders))
+                context['next_button'] = True
+            except StopIteration:
+                pass
+        else:
+            context["boulders"] = Boulder.objects.all().filter(wall__gym = context['gym'])
         return context
 
 class GymCreateView(LoginRequiredMixin, CreateView):
