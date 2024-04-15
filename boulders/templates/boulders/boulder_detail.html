@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <h1 class="text-center">{{ boulder.boulder_name }} <i>({{ boulder.grade }})</i></h1>
+        <h5 class="text-center">{{ boulder.wall.wall_name }} at  {{ boulder.wall.gym.name }}</h5>
+    </div>
+    <div class="row justify-content-center">
+        <canvas id="ctx" width="{{ boulder.wall.img_height }}" height="{{ boulder.wall.img_width }}" style='width:{{ boulder.wall.img_width }}px; height:{{ boulder.wall.img_height }}px;'></canvas>
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if boulder.setter == user %}
+            <div class="mb-5">
+
+                <div>
+                    <a href="{% url 'boulder_delete' pk=boulder.pk %}">Delete Boulder</a>
+                </div>
+                <div>
+                    <a href="{% url 'boulder_update' pk=boulder.pk %}">Update Boulder</a>
+                </div>
+
+            </div>    
+        {% endif %}
+    {% endif %}
+    <script>
+        var myCanvas = document.getElementById('ctx');
+        var ctx = myCanvas.getContext('2d');
+        var img = new Image;
+        img.onload = function(){
+            ctx.drawImage(img,0,0); // Or at whatever offset you like
+            
+            {% for annotation in boulder.annotation_set.all %}
+                ctx.beginPath();
+                ctx.arc({{ annotation.coord_x }}, {{ annotation.coord_y }}, {{ annotation.radius }}, 0, 2 * Math.PI, true);
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#FDDA0D';
+                ctx.stroke();
+                ctx.closePath();
+            {% endfor %}
+        };
+        img.src = "{{ boulder.wall.img_url }}";
+
+        
+    </script>
+
+    
+{% endblock %}

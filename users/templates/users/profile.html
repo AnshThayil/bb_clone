@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ user.username }}</h2>
+    {% if profile.grade_format_font %}
+        <h5>FONT</h5>
+    {% else %}
+        <h5>V SCALE</h5>
+    {% endif %}
+    <form method="POST" action="{% url 'profile' %}">
+        {% csrf_token %}
+        <button type="submit" title="change" class="btn btn-primary">Change</button>
+    </form>
+{% endblock %}

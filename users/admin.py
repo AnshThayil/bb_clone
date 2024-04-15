@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Gym
+from .models import Profile
 
 # Register your models here.
 
-admin.site.register(Gym)
+admin.site.register(Profile)
