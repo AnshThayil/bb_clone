@@ -5,11 +5,6 @@ from boulders.models import Sender
 import datetime
 
 @app.task
-def task_one():
-    print("Task one is called and worker is running as expected")
-    return "success"
-
-@app.task
 def weekly_report_task():
     subject = 'Weekly Report'
     users = User.objects.all()
@@ -34,5 +29,3 @@ def weekly_report_task():
             print(message)
     
     return 0
-
-
