@@ -8,6 +8,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     grade_format_font = models.BooleanField(default=True)
+    points = models.IntegerField()
 
     def __str__(self):
         return self.user.username
