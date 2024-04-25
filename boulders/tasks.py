@@ -1,7 +1,6 @@
 from bb_clone.celery import app
 from django.core.mail import send_mail
 from users.models import User
-from boulders.models import Sender
 import datetime
 
 @app.task
