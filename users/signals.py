@@ -3,6 +3,7 @@ from boulders.models import Sender
 from users.models import Profile
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from django.http import Http404
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -18,8 +19,8 @@ def add_points(sender, instance, created, **kwargs):
             if instance.flash:
                 profile.points += 1
             profile.save()
-        except:
-            pass
+        except Profile.DoesNotExist:
+            raise Http404("Profile not found")
 
 @receiver(pre_delete, sender=Sender)
 def remove_points(sender, instance, using, **kwargs):
@@ -29,5 +30,5 @@ def remove_points(sender, instance, using, **kwargs):
         if instance.flash:
             profile.points -= 1
         profile.save()
-    except:
-        pass
+    except Profile.DoesNotExist:
+        raise Http404
