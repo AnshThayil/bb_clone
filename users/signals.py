@@ -7,7 +7,7 @@ from django.dispatch import receiver
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user = instance, grade_format_font = True)
+        Profile.objects.create(user = instance, grade_format_font = True, points=0)
 
 @receiver(post_save, sender=Sender)
 def add_points(sender, instance, created, **kwargs):

@@ -24,3 +24,14 @@ class GymWithDuplicateNameTestCase(TestCase):
     def test(self):
         with self.assertRaises(IntegrityError) as cm:
             Gym.objects.create(name='Gym0', addr='Delhi', staff=self.user1)
+
+class OneUserCanCreateMultipleGymsTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='TestUser', password='test')
+        self.gym0 = Gym.objects.create(name='Gym0', addr='Test', staff=self.user)
+        self.gym1 = Gym.objects.create(name='Gym1', addr='Test', staff=self.user)
+    
+    def test(self):
+        gym0 = Gym.objects.get(name='Gym0')
+        gym1 = Gym.objects.get(name='Gym1')
+        self.assertEqual(gym0.staff, gym1.staff)
