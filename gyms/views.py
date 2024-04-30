@@ -10,6 +10,29 @@ from itertools import islice
 class GymListView(ListView):
     model = Gym
     context_object_name = 'gyms'
+    paginate_by = 4
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'name')
+        return ordering
+    
+    def get_queryset(self):
+        gyms = Gym.objects.all()
+        query = self.request.GET.get('query', '')
+        if query:
+            ordering = self.get_ordering()
+            gyms = gyms.filter(name__icontains=query).order_by(ordering)
+        return gyms
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ordering = self.get_ordering()
+        if ordering != 'name':
+            context['ordering'] = ordering
+        query  = self.request.GET.get('query', '')
+        if query:
+            context['query'] = query
+        return context
 
 class GymDetailView(DetailView):
     model = Gym

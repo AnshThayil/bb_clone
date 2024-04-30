@@ -3,6 +3,17 @@
 
 {% block content %}
     <h1 class="text-center">View all gyms</h1> 
+    <div class="row ordering-and-search">
+        <div class="col-9">
+            Sort by: <a href="?ordering=name{% if query %}&query={{ query }}{% endif %}" style="display: inline">Name</a> | <a href="?ordering=addr{% if query %}&query={{ query }}{% endif %}" style="display: inline;">Location</a>
+        </div>
+        <div class="col-3">
+            <form  method="GET" action="">
+                <input type="search" class="form-control mb-1" name="query">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div> 
     <div class="row">
         {% for gym in gyms %}
             <div class="col-sm-3" style="padding: 1%;">
@@ -21,6 +32,25 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if ordering %}&ordering={{ ordering }}{% endif %}{% if query %}&query={{ query }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{%if ordering %}&ordering={{ ordering }}{% endif %}{% if query %}&query={{ query }}{% endif %}">previous</a>
+            {% endif %}
+            
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if ordering %}&ordering={{ ordering }}{% endif %}{% if query %}&query={{ query }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if ordering %}&ordering={{ ordering }}{% endif %}{% if query %}&query={{ query }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+
     </div>
     {% if user.is_authenticated %}
         {% if user|has_group:"StaffUser" %}
