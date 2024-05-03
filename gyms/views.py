@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from django.shortcuts import render
 from .models import Gym
 from boulders.models import Boulder
@@ -17,18 +18,16 @@ class GymListView(ListView):
         return ordering
     
     def get_queryset(self):
-        gyms = Gym.objects.all()
+        ordering = self.get_ordering()
+        gyms = Gym.objects.all().order_by(ordering)
         query = self.request.GET.get('query', '')
         if query:
-            ordering = self.get_ordering()
             gyms = gyms.filter(name__icontains=query).order_by(ordering)
         return gyms
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ordering = self.get_ordering()
-        if ordering != 'name':
-            context['ordering'] = ordering
+        context['ordering'] = self.get_ordering()
         query  = self.request.GET.get('query', '')
         if query:
             context['query'] = query
@@ -61,6 +60,33 @@ class GymDetailView(DetailView):
                 pass
         else:
             context["boulders"] = Boulder.objects.all().filter(wall__gym = context['gym'])
+        return context
+
+class BoulderListView(ListView):
+    model = Boulder
+    template_name = 'gyms/boulder_list.html'
+    context_object_name = 'boulders'
+    paginate_by = 5
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'boulder_name')
+        return ordering
+
+    def get_queryset(self):
+        ordering = self.get_ordering()
+        boulders = Boulder.objects.all().filter(wall__gym__pk = self.kwargs['pk'])
+        query = self.request.GET.get('query', '')
+        if query != '':
+            boulders = boulders.filter(boulder_name__icontains = query).order_by(ordering)
+        return boulders
+    
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['gym'] = Gym.objects.get(pk = self.kwargs['pk'])
+        context['ordering'] = self.get_ordering()
+        query = self.request.GET.get('query', '')
+        if query:
+            context['query'] = query
         return context
 
 class GymCreateView(LoginRequiredMixin, CreateView):
