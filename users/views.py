@@ -34,7 +34,7 @@ def register(request):
 @login_required
 def profile(request):
     if request.method == 'GET':
-        return render(request, 'users/profile.html', context={'profile': Profile.objects.get(user = request.user)})
+        return render(request, 'users/profile.html', context={'profile': Profile.objects.get(user = request.user), 'ascents': request.user.sender_set.all().order_by('-date')})
     if request.method == 'POST':
         obj = Profile.objects.get(user = request.user)
         obj.grade_format_font = not obj.grade_format_font

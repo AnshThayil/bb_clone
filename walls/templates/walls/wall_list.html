@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div>
+    <div class="row">
         <h1 class="text-center">{{ gym.name }}</h1>
         <h3 class="text-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
@@ -11,17 +11,18 @@
         </h3>
     </div>
     <div class="row justify-content-center">
-        <div class="col-sm-8">
+        <div class="col-10 col-md-8">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <div class="row justify-content-center">
-                        <strong class="col-sm-3 text-center"><i>Wall Name</i></strong> <i class="text-center col-sm-3">Edit</i><i class="text-center col-sm-3">Delete</i>
+                    <div class="justify-content-center row">
+                        <strong class="d-block d-md-none col-12 text-center">Walls</strong>
+                        <strong class="d-none d-md-block col-md-3 text-center"><i>Wall Name</i></strong> <i class="d-none d-md-block text-center col-md-3">Edit</i><i class="d-none d-md-block text-center col-md-3">Delete</i>
                     </div>
                 </li>
                 {% for wall in walls %}
                     <li class="list-group-item">
                         <div class="row justify-content-center">
-                            <strong class="col-sm-3 text-center">{{ wall.wall_name }}</strong><i class="text-center col-sm-3"><a href="{% url 'wall_update' pk=wall.pk %}">Edit</a></i> <i class="text-center col-sm-3"><a href="{% url 'wall_delete' pk=wall.pk %}">Delete</a></i> 
+                            <strong class="col-md-3 text-center">{{ wall.wall_name }}</strong><i class="text-center col-md-3"><a href="{% url 'wall_update' pk=wall.pk %}">Edit</a></i> <i class="text-center col-md-3"><a href="{% url 'wall_delete' pk=wall.pk %}">Delete</a></i> 
                         </div>
                     </li>
                 {% endfor %}
@@ -32,8 +33,10 @@
 
     {% if user.is_authenticated %}
         {% if gym.staff == user %}
-            <div>
-                <a href="{% url 'wall_create' gym_pk=gym.pk %}">Create Wall</a>
+            <div class="justify-content-center row my-4">
+                <div class="col-1">
+                    <a class="btn btn-dark" href="{% url 'wall_create' gym_pk=gym.pk %}">Create</a>
+                </div>
             </div>
         {% endif %}
     {% endif %}

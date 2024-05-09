@@ -30,8 +30,8 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{% url 'wall_list' gym_pk=gym.pk %}">Manage Walls</a></li>
-                                <li><a class="dropdown-item" href="{% url 'gym_delete' pk=gym.pk %}">Update Gym</a></li>
-                                <li><a class="dropdown-item" href="{% url 'gym_update' pk=gym.pk %}">Delete Gym</a></li>
+                                <li><a class="dropdown-item" href="{% url 'gym_update' pk=gym.pk %}">Update Gym</a></li>
+                                <li><a class="dropdown-item" href="{% url 'gym_delete' pk=gym.pk %}">Delete Gym</a></li>
                             </ul>
                         </div>
                     {% endif %}

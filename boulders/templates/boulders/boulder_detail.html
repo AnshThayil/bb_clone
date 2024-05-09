@@ -1,19 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-    <div>
+    <div class="row mb-3">
         <h1 class="text-center">{{ boulder.boulder_name }} <i>({{ boulder.grade }})</i></h1>
         <h5 class="text-center">{{ boulder.wall.wall_name }} at  {{ boulder.wall.gym.name }}</h5>
     </div>
-    <div class="row justify-content-center m-5">
-        <div class="col-7">
+    {% if user.is_authenticated %}
+        {% if boulder.setter == user %}
+            <div class="row mb-3 justify-content-center">
+                <div class="col-2">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Manage Boulder
+                        </button>
+                        <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'boulder_update' pk=boulder.pk %}">Update Boulder</a></li>
+                        <li><a class="dropdown-item" href="{% url 'boulder_delete' pk=boulder.pk %}">Delete Boulder</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="row justify-content-center mb-3">
+        <div class="col-12 col-md-7">
             <canvas id="ctx" width="{{ boulder.wall.img_height }}" height="{{ boulder.wall.img_width }}" style='width:{{ boulder.wall.img_width }}px; height:{{ boulder.wall.img_height }}px;'></canvas>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-md-3">
             <h4>Ascents</h4>
             <ul class="list-group">
                 {% for sender in boulder.sender_set.all %}
                     <li class="list-group-item">
-                        <span class="badge text-bg-primary rounded-pill col-2">
+                        <span class="badge text-bg-dark rounded-pill col-2">
                             {% if sender.flash %}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16"><path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/></svg>
                             {% else %}
@@ -37,7 +54,7 @@
                 {% if user_has_sent %}
                     <form method="POST" action={% url "sender_delete" pk=sender_pk gym_pk=boulder.pk %} class="mt-3">
                         {% csrf_token %}
-                        <input class='btn btn-primary' type="submit" value="Remove Ascent">
+                        <input class='btn btn-dark' type="submit" value="Remove Ascent">
                     </form>
 
                 {% else %}
@@ -46,27 +63,13 @@
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="flash"><label class="form-check-label">Flash?</label>
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Log Ascent">
+                        <input class="btn btn-dark" type="submit" value="Log Ascent">
                     </form>
                 {% endif %}
             {% endif %}
         </div>
     </div>
 
-    {% if user.is_authenticated %}
-        {% if boulder.setter == user %}
-            <div class="mb-5">
-
-                <div>
-                    <a href="{% url 'boulder_delete' pk=boulder.pk %}">Delete Boulder</a>
-                </div>
-                <div>
-                    <a href="{% url 'boulder_update' pk=boulder.pk %}">Update Boulder</a>
-                </div>
-
-            </div>    
-        {% endif %}
-    {% endif %}
     <script>
         var myCanvas = document.getElementById('ctx');
         var ctx = myCanvas.getContext('2d');
