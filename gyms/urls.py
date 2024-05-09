@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GymListView, GymDetailView, GymCreateView, GymUpdateView, GymDeleteView, BoulderListView
+from .views import GymListView, GymCreateView, GymUpdateView, GymDeleteView, BoulderListView, GymListApi, GymDetailApi
 from boulders.views import BoulderCreateView
 from walls.views import WallListView, WallCreateView, WallUpdateView, WallDeleteView
 
@@ -15,4 +15,6 @@ urlpatterns = [
     path('gym/create', GymCreateView.as_view(), name='gym_create'),
     path('gym/<int:pk>/update', GymUpdateView.as_view(), name='gym_update'),
     path('gym/<int:pk>/delete', GymDeleteView.as_view(), name='gym_delete'),
+    path('api/gym', GymListApi.as_view(), name='gym-list'), 
+    path('api/gym/<int:pk>', GymDetailApi.as_view(), name='gym-detail'),
 ]

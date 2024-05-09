@@ -5,6 +5,8 @@ from boulders.models import Boulder
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from itertools import islice
+from rest_framework import generics
+from .serializers import GymSerializer
 
 # Create your views here.
 
@@ -64,7 +66,7 @@ class GymDetailView(DetailView):
 
 class BoulderListView(ListView):
     model = Boulder
-    template_name = 'gyms/boulder_list.html'
+    # template_name = 'gyms/boulder_list.html'
     context_object_name = 'boulders'
     paginate_by = 5
 
@@ -74,7 +76,7 @@ class BoulderListView(ListView):
 
     def get_queryset(self):
         ordering = self.get_ordering()
-        boulders = Boulder.objects.all().filter(wall__gym__pk = self.kwargs['pk'])
+        boulders = Boulder.objects.all().filter(wall__gym__pk = self.kwargs['pk']).order_by(ordering)
         query = self.request.GET.get('query', '')
         if query != '':
             boulders = boulders.filter(boulder_name__icontains = query).order_by(ordering)
@@ -121,3 +123,11 @@ class GymDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == gym.staff:
             return True
         return False
+
+class GymListApi(generics.ListCreateAPIView):
+    queryset = Gym.objects.all()
+    serializer_class = GymSerializer
+
+class GymDetailApi(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Gym.objects.all()
+    serializer_class = GymSerializer
