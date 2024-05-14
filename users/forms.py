@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    is_staff = forms.BooleanField()
+    staff_user = forms.BooleanField(required=False)
     first_name = forms.CharField(required=True, max_length=150)
     last_name = forms.CharField(required=True, max_length=150)
 
@@ -12,7 +12,7 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = (
             'username', 
-            'is_staff',
+            'staff_user',
             'first_name',
             'last_name',
             'email',

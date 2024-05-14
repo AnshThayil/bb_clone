@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+{% load range_tag %}
+    <div>
+        <h1 class="text-center">{{ gym.name }}</h1>
+        <h3 class="text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            </svg>
+            {{ gym.addr }}
+        </h3>
+    </div>
+    <div class="row justify-content-center">
+        <div class="row ordering my-2">
+            <div class="col-md-4 col-5 offset-1">
+                Sort By:
+                <div class="btn-group-sm btn-group" role="group">
+                    <a href="?ordering=boulder_name{% if query %}&query={{ query }}{% endif %}" class="btn btn-outline-dark {% if ordering == 'boulder_name' %} active {% endif %}">Name</a>
+                    <a href="?ordering=grade{% if query %}&query={{ query }}{% endif %}" class="btn btn-outline-dark {% if ordering == 'grade' %} active {% endif %}">Grade</a>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="btn-group btn-group-sm col-3 offset-1 col-md-2 offset-md-3 offser-lg-5" role="group">
+                    <a class="btn btn-outline-dark" href="{% url 'boulder_create' gym_pk=gym.pk%}">Create</a>
+                    {% if gym.staff == user %}
+                        <div class="btn-group btn-group-sm " role="group">
+                            <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Staff Controls
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'wall_list' gym_pk=gym.pk %}">Manage Walls</a></li>
+                                <li><a class="dropdown-item" href="{% url 'gym_update' pk=gym.pk %}">Update Gym</a></li>
+                                <li><a class="dropdown-item" href="{% url 'gym_delete' pk=gym.pk %}">Delete Gym</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-12">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row justify-content-center">
+                            <i class="text-center d-none d-lg-block col-sm-1">Ascents</i><strong class="col-9 col-md-3 text-center"><i>Boulders</i></strong> <i class="col-3 col-md-2">Grade</i><span class="col-sm-2 col-md-3 d-none d-md-block">Wall</span>
+                        </div>
+                    </li>
+                    {% for boulder in boulders %}
+                        <li class="list-group-item">
+                            <div class="row justify-content-center">
+                                <i class="text-center d-none d-lg-block col-sm-1">{{ boulder.sender_set.count }}</i> <strong class="col-9 col-md-3 text-center"><a style="color: black;" href="../boulder/{{ boulder.pk }}">{{ boulder.boulder_name }}</a></strong> <i class="col-3 col-md-2">{{ boulder.grade }}</i><span class="col-sm-2 col-md-3 d-none d-md-block">{{ boulder.wall.wall_name}}</span></a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="pagination row my-2">
+            <div class="btn-toolbar col-12 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group me-2" role="group">
+                    {% for page_num in page_obj.paginator.num_pages|times %}
+                        <a href="?page={{page_num}}{% if query %}&query={{ query }}{% endif %}" class="btn btn-sm btn-outline-dark {% if page_num == page_obj.number %}active{% endif %}">{{ page_num }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- {% if user.is_authenticated %}
+        <div>
+            <a href="{% url 'boulder_create' gym_pk=gym.pk%}">Create Boulder</a>
+        </div>
+        {% if gym.staff == user %}
+            <div>
+                <a href="{% url 'wall_list' gym_pk=gym.pk %}">Manage Walls</a>
+            </div>
+            <div>
+                <a href="{% url 'gym_delete' pk=gym.pk %}">Delete Gym</a>
+            </div>
+            <div>
+                <a href="{% url 'gym_update' pk=gym.pk %}">Update Gym</a>
+            </div>
+        {% endif %}
+    {% endif %}
+     -->
+
+{% endblock %}

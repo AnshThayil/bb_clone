@@ -1,10 +1,30 @@
 {% extends "base.html" %}
+{% load auth_extras %}
+{% load range_tag %}
 
 {% block content %}
-    <h1 class="text-center">View all gyms</h1> 
+    <h1 class="text-center">All Gyms</h1> 
+    <div class="row ordering my-2">
+        <div class="col-md-4 col-6">
+            Sort By:
+            <div class="btn-group-sm btn-group" role="group">
+                <a href="?ordering=name{% if query %}&query={{ query }}{% endif %}" class="btn btn-outline-dark {% if ordering == 'name' %} active {% endif %}">Name</a>
+                <a href="?ordering=addr{% if query %}&query={{ query }}{% endif %}" class="btn btn-outline-dark {% if ordering == 'addr' %} active {% endif %}">Location</a>
+            </div>
+        </div>
+        {% if user.is_authenticated %}
+            {% if user|has_group:"StaffUser" %}
+                <div class="col-2 offset-4 col-md-1 offset-md-7">
+                    <a href="{% url 'gym_create' %}" type="button" class="btn btn-sm btn-dark">
+                        Create
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div> 
     <div class="row">
         {% for gym in gyms %}
-            <div class="col-sm-3" style="padding: 1%;">
+            <div class="col-12 col-sm-6 col-lg-3 px-3 px-sm-2 py-1">
                 <div class="card text-center" >
                     <div class="card-body">
                         <h5 class="card-title">{{ gym.name }}</h5>
@@ -15,18 +35,19 @@
                             </svg>
                             {{ gym.addr }}
                         </p>
-                        <a href="gym/{{ gym.pk }}" class="btn btn-primary">View Boulders</a>
+                        <a href="gym/{{ gym.pk }}" class="btn btn-dark">View Boulders</a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-    {% if user.is_authenticated %}
-        {% if user.is_staff %}
-            <div>
-                <a href="{% url 'gym_create' %}">Create a new gym</a>
+    <div class="pagination row my-2">
+        <div class="btn-toolbar col-12 justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group me-2" role="group">
+                {% for page_num in page_obj.paginator.num_pages|times %}
+                    <a href="?page={{page_num}}{% if query %}&query={{ query }}{% endif %}" class="btn btn-sm btn-outline-dark {% if page_num == page_obj.number %}active{% endif %}">{{ page_num }}</a>
+                {% endfor %}
             </div>
-        {% endif %}
-    {% endif %}
-
+        </div>
+    </div>
 {% endblock %}

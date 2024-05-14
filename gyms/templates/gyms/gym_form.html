@@ -2,15 +2,15 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section justify-content-center row">
-        <div class="col-md-8">
+        <div class="col-10 col-md-6">
             <form method="POST">
                 {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Create a new gym</legend>
+                <fieldset class="form-group my-3">
+                    <legend class="border-bottom mb-3">Create a new gym</legend>
                     {{ form|crispy }}
                 </fieldset>
-                <div class="form-group mt-5">
-                    <button class="btn btn-outline-info" type="submit">Create</button>
+                <div class="form-group my-2">
+                    <button class="btn btn-dark" type="submit">Create</button>
                 </div>
             </form>
         </div>

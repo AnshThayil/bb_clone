@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Delete Gym</legend>
-                <h2>Are you sure you want to delete the gym "{{ object.name }}"</h2>
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <a class="btn btn-outline-secondary" href="{% url 'gym_detail' object.id %}">Cancel</a>
-            </div>
-        </form>
+    <div class="content-section justify-content-center row">
+        <div class="col-10 col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group my-3">
+                    <legend class="border-bottom mb-3">Delete Gym</legend>
+                    <h2>Are you sure you want to delete the gym "{{ object.name }}"</h2>
+                </fieldset>
+                <div class="form-group my-2">
+                    <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                    <a class="btn btn-outline-dark" href="{% url 'gym_detail' object.id %}">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock content %}
