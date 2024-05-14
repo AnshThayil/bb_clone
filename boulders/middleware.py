@@ -14,7 +14,7 @@ class GradeMiddleware(MiddlewareMixin):
 
             if response.template_name == ['boulders/boulder_detail.html']:
                 response.context_data['boulder'].grade = self.translate(response.context_data['boulder'].grade, format)
-            elif response.template_name == ['gyms/gym_detail.html']:
+            elif response.template_name == ['boulders/boulder_list.html']:
                 for boulder in response.context_data['boulders']:
                     boulder.grade = self.translate(boulder.grade, format)
     

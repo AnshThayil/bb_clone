@@ -1,14 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>{{ user.username }} - {{ profile.points }} points</h2>
-    {% if profile.grade_format_font %}
-        <h5>FONT</h5>
-    {% else %}
-        <h5>V SCALE</h5>
-    {% endif %}
-    <form method="POST" action="{% url 'profile' %}">
-        {% csrf_token %}
-        <button type="submit" title="change" class="btn btn-primary">Change</button>
-    </form>
+{% load auth_extras %}
+    <div class="row justify-content-center">
+        <div class="col-10 text-center">
+            <h2 class="mb-5">{{ user.username }}</h2>
+            
+            {% if profile.grade_format_font %}
+                <h5>Grade Format: FONT</h5>
+            {% else %}
+                <h5>Grade Format: V SCALE</h5>
+            {% endif %}
+            <form method="POST" class="mb-3" action="{% url 'profile' %}">
+                {% csrf_token %}
+                <button type="submit" title="change" class="btn btn-sm btn-dark">Change</button>
+            </form>
+            <h2>Points: {{ profile.points }}</h2>
+            <h3>Points Breakdown</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Boulder Name</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Points</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for send in ascents %}
+                        <tr>
+                            <td>{{ send.boulder.boulder_name }}</td>
+                            <td>{{ send.boulder.grade|translate:profile.grade_format_font }}</td>
+                            <td>{{ send.boulder.grade }}</td>
+                            <td>{{ send.date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     
 {% endblock %}

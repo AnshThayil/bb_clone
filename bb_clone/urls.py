@@ -27,4 +27,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('api/user', user_views.UserList.as_view(), name='user-list'),
+    path('api/user/<int:pk>', user_views.UserDetail.as_view(), name='user-detail'),
+    path('api/group', user_views.GroupList.as_view(), name='group-list' ),
+    path('api/group/<int:pk>', user_views.GroupDetail.as_view(), name='group-detail')
 ]

@@ -38,6 +38,10 @@ class BoulderCreateView(LoginRequiredMixin, CreateView):
         # context['gym_name'] = Gym.objects.get(pk=self.kwargs["gym_pk"]).name
         gym = get_object_or_404(Gym, pk=self.kwargs["gym_pk"])
         context["gym_name"] = gym.name
+        if len(gym.wall_set.all()) == 0:
+            context['has_walls'] = False
+        else:
+            context['has_walls'] = True
         return context
     
     def form_valid(self, form):
