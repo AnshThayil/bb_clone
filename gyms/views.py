@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from itertools import islice
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, BasePermission, SAFE_METHODS
 from .serializers import GymSerializer
 
 # Create your views here.
@@ -124,10 +125,24 @@ class GymDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+class GymStaffOrReadOnly(BasePermission): 
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.staff == request.user
+
+class IsStaffUserOrReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return request.user.groups.filter(name='StaffUser').exists()
+
 class GymListApi(generics.ListCreateAPIView):
+    permission_classes = [IsStaffUserOrReadOnly]
     queryset = Gym.objects.all()
     serializer_class = GymSerializer
 
 class GymDetailApi(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [GymStaffOrReadOnly]
     queryset = Gym.objects.all()
     serializer_class = GymSerializer
