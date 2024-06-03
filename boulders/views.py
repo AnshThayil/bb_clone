@@ -5,6 +5,9 @@ from .forms import BoulderCreateForm, BoulderUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from rest_framework import generics
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from .serializers import BoulderSerializer
 
 # Create your views here.
 
@@ -111,3 +114,19 @@ class SenderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == sender:
             return True
         return False
+
+class BoulderSetterOrReadOnly(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.setter == request.user
+
+class BoulderDetailApi(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [BoulderSetterOrReadOnly]
+    queryset = Boulder.objects.all()
+    serializer_class = BoulderSerializer
+
+class BoulderCreateApi(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Boulder.objects.all()
+    serializer_class = BoulderSerializer

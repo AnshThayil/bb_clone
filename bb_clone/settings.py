@@ -33,6 +33,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework', 
+    'rest_framework.authtoken',
+    # 'django.contrib.staticfiles',
+    'drf_yasg',
     'crispy_forms',
     'crispy_bootstrap4',
     'users.apps.UsersConfig',
@@ -168,3 +171,9 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+REST_FRAMEWORK = {
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+   )
+}

@@ -17,6 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from users import views as user_views
 from django.contrib.auth import views as auth_views
+from boulders.views import BoulderDetailApi, BoulderCreateApi
+from rest_framework.authtoken import views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title = 'BB Clone API',
+        default_version='v1'
+    )
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +41,9 @@ urlpatterns = [
     path('api/user', user_views.UserList.as_view(), name='user-list'),
     path('api/user/<int:pk>', user_views.UserDetail.as_view(), name='user-detail'),
     path('api/group', user_views.GroupList.as_view(), name='group-list' ),
-    path('api/group/<int:pk>', user_views.GroupDetail.as_view(), name='group-detail')
+    path('api/group/<int:pk>', user_views.GroupDetail.as_view(), name='group-detail'),
+    path('api/boulder/<int:pk>', BoulderDetailApi.as_view(), name='boulder-detail'),
+    path('api/boulder', BoulderCreateApi.as_view(), name='boulder-create'),
+    path('api/auth', views.obtain_auth_token, name='auth-token'),
+    path('api', schema_view.with_ui('swagger'), name='api-doc')
 ]

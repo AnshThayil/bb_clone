@@ -6,6 +6,7 @@ from .models import Profile
 from django.urls import reverse
 from django.contrib.auth.models import Group, User
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, GroupSerializer
 
 # Create your views here.
@@ -41,18 +42,22 @@ def profile(request):
         obj.save()
         return redirect(reverse('profile'))
 
-class UserList(generics.ListCreateAPIView):
+class UserList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class GroupList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
 class GroupDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer

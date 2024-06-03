@@ -4,6 +4,9 @@ from .models import Wall
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from gyms.models import  Gym
 from django.urls import reverse
+from rest_framework import generics
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+from .serializers import WallSerializer
 
 # Create your views here.
 
@@ -81,3 +84,21 @@ class WallDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == wall.gym.staff:
             return True
         return False
+
+class GymStaffOrReadOnly(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.gym.staff == request.user
+
+    
+class WallCreateApi(generics.CreateAPIView):
+    permission_classes = [GymStaffOrReadOnly]
+    queryset = Wall.objects.all()
+    serializer_class = WallSerializer
+
+class WallDetailApi(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [GymStaffOrReadOnly]
+    queryset = Wall.objects.all()
+    serializer_class = WallSerializer

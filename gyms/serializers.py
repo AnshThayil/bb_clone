@@ -1,11 +1,10 @@
 from .models import Gym
 from rest_framework import serializers
+from walls.serializers import WallSerializer
+from users.serializers import UserSerializer
 
-class GymSerializer(serializers.ModelSerializer):
+class GymSerializer(serializers.HyperlinkedModelSerializer):
     
-    staff = serializers.HyperlinkedRelatedField(view_name='user-detail', format='html', read_only=True)
-    # wall_set = serializers.HyperlinkedRelatedField(view_name='wall_update', format='html', read_only=True)
-
     class Meta:
         model = Gym
-        fields = ['url', 'name', 'addr', 'staff', 'wall_set']
+        fields = ['id','url', 'name', 'addr', 'staff', 'wall_set']
